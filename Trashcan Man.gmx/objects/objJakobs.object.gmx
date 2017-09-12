@@ -25,10 +25,11 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>spd = 8;
+            <string>cooldown = 0;
+hp = 100;
+spd = 8;
 spriteRes_x = 64;
 spriteRes_y = 64;
-cooldown = 0;
 
 show_message("width: " + string(room_width) + " height: " + string(room_height));
 </string>
@@ -107,9 +108,37 @@ if (keyboard_check(vk_down)){
 cooldown -= 1;
 if (mouse_check_button(mb_left) &amp;&amp; cooldown &lt;= 0) {
     instance_create(x + (30 * image_xscale), y - (19 * image_yscale), objBullet);
+    audio_play_sound(sndGunshot, 10, false);
     cooldown = 10;
 }
 
+//Destroy self and restart game if hp runs out
+if (hp &lt;= 0) {
+    game_restart();
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="objEnemyMelee1">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= 1;
 </string>
           </argument>
         </arguments>
@@ -133,6 +162,29 @@ if (mouse_check_button(mb_left) &amp;&amp; cooldown &lt;= 0) {
           <argument>
             <kind>1</kind>
             <string>show_message(string(x) + " " + string(y));
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="5" enumb="27">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>game_end();
 </string>
           </argument>
         </arguments>
