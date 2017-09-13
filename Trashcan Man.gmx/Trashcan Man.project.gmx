@@ -14,14 +14,16 @@
     <sound>sound\sndFire</sound>
   </sounds>
   <sprites name="sprites">
-    <sprite>sprites\sprJakobs</sprite>
+    <sprite>sprites\sprJakobsIdle</sprite>
     <sprite>sprites\sprBullet</sprite>
     <sprite>sprites\sprStrike</sprite>
     <sprite>sprites\sprRocket</sprite>
-    <sprite>sprites\sprEnemyReg1</sprite>
-    <sprite>sprites\sprEnemyMelee1</sprite>
-    <sprite>sprites\sprEnemyHeavy1</sprite>
+    <sprite>sprites\sprEnemyReg1Idle</sprite>
+    <sprite>sprites\sprEnemyMelee1Idle</sprite>
+    <sprite>sprites\sprEnemyHeavy1Idle</sprite>
     <sprite>sprites\sprSpawner</sprite>
+    <sprite>sprites\sprWorkshop</sprite>
+    <sprite>sprites\sprSplosion</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bgTileset1</background>
@@ -48,6 +50,8 @@
     <object>objects\objHealthbar</object>
     <object>objects\objMusic</object>
     <object>objects\objHUD</object>
+    <object>objects\objWorkshop</object>
+    <object>objects\objSplosion</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm1</room>
