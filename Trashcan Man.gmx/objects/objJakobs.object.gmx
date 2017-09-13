@@ -25,13 +25,39 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>cooldown = 0;
-hp = 100;
-spd = 8;
-spriteRes_x = 64;
-spriteRes_y = 64;
+            <string>//Create weapon cooldown to start at 0
+cooldown = 0;
 
-show_message("width: " + string(room_width) + " height: " + string(room_height));
+//Health
+hp = 100;
+
+//Speed
+spd = 8;
+
+//Points creation and set to 0
+points = 0;
+
+//Regular weapon stats
+regDelay = 10;
+regDamage = 1;
+
+//Melee weapon stats
+strikeDelay = 20;
+strikeDamage = 1;
+
+//Heavy weapon stats
+heavyDelay = 30;
+heavyDamage = 1;
+
+//Create parts and start at 0
+part1 = 90;
+part2 = 90;
+part3 = 90;
+
+//Upgrade requirements
+regUpgradeReq = 100;
+strikeUpgradeReq = 100;
+heavyUpgradeReq = 100;
 </string>
           </argument>
         </arguments>
@@ -71,17 +97,17 @@ if (keyboard_check(ord("W")))y -= spd;
 if (keyboard_check(ord("S")))y += spd;
 
 //Boundaries
-if (x - (spriteRes_x/2) &lt;= 0) {
-    x = spriteRes_x/2;
+if (x - (sprite_width/2) &lt;= 0) {
+    x = sprite_width/2;
 }
-if (y - spriteRes_y/2 &lt;= 0) {
-    y = spriteRes_y/2;
+if (y - sprite_height/2 &lt;= 0) {
+    y = sprite_height/2;
 }
-if (x + spriteRes_x/2 &gt;= room_width) {
-    x = room_width - spriteRes_x/2;
+if (x + sprite_width/2 &gt;= room_width) {
+    x = room_width - sprite_width/2;
 }
-if (y + spriteRes_y/2 &gt;= room_height) {
-    y = room_height - spriteRes_y/2;
+if (y + sprite_height/2 &gt;= room_height) {
+    y = room_height - sprite_height/2;
 }
 
 //GROW DAMNIT
@@ -104,18 +130,84 @@ if (keyboard_check(vk_down)){
     }
 }
 
-//Shooting
+//Attack cooldown
 cooldown -= 1;
+
+//Regular
 if (mouse_check_button(mb_left) &amp;&amp; cooldown &lt;= 0) {
-    instance_create(x + (30 * image_xscale), y - (19 * image_yscale), objBullet);
-    audio_play_sound(sndGunshot, 10, false);
-    cooldown = 10;
+    instance_create(x + (32 * image_xscale), y - (12 * image_yscale), objBullet);
+    cooldown = regDelay;
 }
 
-//Destroy self and restart game if hp runs out
+//Melee
+if (mouse_check_button(mb_right) &amp;&amp; cooldown &lt;= 0) {
+    instance_create(x + (16 * image_xscale), y, objStrike);
+    //audio_play_sound(sndGunshot, 10, false);
+    cooldown = strikeDelay;
+}
+
+//Heavy
+if (mouse_check_button(mb_middle) &amp;&amp; cooldown &lt;= 0) {
+    instance_create(x + (32 * image_xscale), y - (12 * image_yscale), objRocket);
+    //audio_play_sound(sndGunshot, 10, false);
+    cooldown = heavyDelay;
+}
+
+//Destroy self and restart game if hp runs out, play death sound
 if (hp &lt;= 0) {
     game_restart();
 }
+
+//Press 1, 2, or 3 to upgrade
+if (keyboard_check(ord("1")) &amp;&amp; regUpgradeReq &lt;= part1) upgrade("reg");
+if (keyboard_check(ord("2")) &amp;&amp; strikeUpgradeReq &lt;= part2) upgrade("strike");
+if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("heavy");
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="objEnemyHeavy1">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= 1;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="objEnemyReg1">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= 1;
 </string>
           </argument>
         </arguments>
@@ -138,7 +230,7 @@ if (hp &lt;= 0) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>hp -= 1;
+            <string>hp -= 2;
 </string>
           </argument>
         </arguments>

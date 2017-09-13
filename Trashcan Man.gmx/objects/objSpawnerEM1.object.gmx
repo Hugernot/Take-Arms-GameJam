@@ -26,6 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>cooldown = 0;
+cooldownDuration = 500;
 </string>
           </argument>
         </arguments>
@@ -51,7 +52,7 @@
             <string>//When cooldown is done, spawn enemy and reset
 if (cooldown &lt;= 0) {
     instance_create(x, y, objEnemyMelee1);
-    cooldown = 180;
+    cooldown = cooldownDuration;
 }
 
 //Cooldown cooling down
