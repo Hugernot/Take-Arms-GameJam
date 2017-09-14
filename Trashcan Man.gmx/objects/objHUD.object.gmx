@@ -25,12 +25,14 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_set_color(c_black);
+            <string>draw_set_alpha(1);
+draw_set_color(c_black);
 draw_set_font(fntArialBold);
+draw_set_halign(fa_left);
 draw_text(view_xview[0] + 10, view_yview[0] + 10, 
 "Health: " + string(objJakobs.hp) + 
 "#Points: " + string(objJakobs.points) +
-"#--Parts--" + 
+"#--PARTS--" + 
 "#Part1: " + string(objJakobs.part1) +
 "#Part2: " + string(objJakobs.part2) +
 "#Part3: " + string(objJakobs.part3));
@@ -40,10 +42,10 @@ if (objJakobs.part1 &gt;= objJakobs.regUpgradeReq) {
     draw_text(view_xview[0] + 10, view_yview[0] + 200, "PRESS 1 TO UPGRADE #REGULAR WEAPON")
 }
 if (objJakobs.part2 &gt;= objJakobs.strikeUpgradeReq) {
-    draw_text(view_xview[0] + 10, view_yview[0] + 275, "PRESS 2 TO UPGRADE #REGULAR WEAPON")
+    draw_text(view_xview[0] + 10, view_yview[0] + 275, "PRESS 2 TO UPGRADE #MELEE WEAPON")
 }
 if (objJakobs.part3 &gt;= objJakobs.strikeUpgradeReq) {
-    draw_text(view_xview[0] + 10, view_yview[0] + 350, "PRESS 3 TO UPGRADE #REGULAR WEAPON")
+    draw_text(view_xview[0] + 10, view_yview[0] + 350, "PRESS 3 TO UPGRADE #HEAVY WEAPON")
 }
 </string>
           </argument>

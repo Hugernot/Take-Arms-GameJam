@@ -19,3 +19,5 @@ switch (item) {
         objJakobs.part3 -= 100;
         break;
 }
+
+audio_play_sound(sndUpgrade, 9, false);

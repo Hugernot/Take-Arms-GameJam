@@ -183,6 +183,9 @@ hp -= damageFromStrike;
             <string>//Upon impact with bullet, damage self and destory bullet that hit
 hp -= damageFromBullet;
 with(other) instance_destroy();
+
+//Play hit sound
+audio_play_sound(sndHit1, 8, false);
 </string>
           </argument>
         </arguments>

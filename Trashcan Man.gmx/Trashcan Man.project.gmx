@@ -5,25 +5,39 @@
   </Configs>
   <NewExtensions/>
   <sounds name="sound">
-    <sound>sound\sndGunshot</sound>
-    <sound>sound\sndMusic</sound>
-    <sound>sound\sndHit1</sound>
+    <sounds name="weapons">
+      <sound>sound\sndGunshot</sound>
+      <sound>sound\sndHit1</sound>
+      <sound>sound\sndWhoosh</sound>
+      <sound>sound\sndFire</sound>
+      <sound>sound\sndExplosion</sound>
+    </sounds>
+    <sounds name="music">
+      <sound>sound\sndOpening</sound>
+      <sound>sound\sndMusic</sound>
+    </sounds>
     <sound>sound\sndDeath</sound>
-    <sound>sound\sndWhoosh</sound>
-    <sound>sound\sndExplosion</sound>
-    <sound>sound\sndFire</sound>
+    <sound>sound\sndPickup</sound>
+    <sound>sound\sndRain</sound>
+    <sound>sound\sndUpgrade</sound>
   </sounds>
   <sprites name="sprites">
     <sprite>sprites\sprJakobsIdle</sprite>
-    <sprite>sprites\sprBullet</sprite>
-    <sprite>sprites\sprStrike</sprite>
-    <sprite>sprites\sprRocket</sprite>
-    <sprite>sprites\sprEnemyReg1Idle</sprite>
-    <sprite>sprites\sprEnemyMelee1Idle</sprite>
-    <sprite>sprites\sprEnemyHeavy1Idle</sprite>
+    <sprites name="weapons">
+      <sprite>sprites\sprBullet</sprite>
+      <sprite>sprites\sprStrike</sprite>
+      <sprite>sprites\sprRocket</sprite>
+      <sprite>sprites\sprSplosion</sprite>
+    </sprites>
+    <sprites name="enemies">
+      <sprite>sprites\sprEnemyReg1Idle</sprite>
+      <sprite>sprites\sprEnemyHeavy1Idle</sprite>
+      <sprite>sprites\sprEnemyMelee1Idle</sprite>
+    </sprites>
     <sprite>sprites\sprSpawner</sprite>
     <sprite>sprites\sprWorkshop</sprite>
-    <sprite>sprites\sprSplosion</sprite>
+    <sprite>sprites\sprLootBox</sprite>
+    <sprite>sprites\sprTitle</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bgTileset1</background>
@@ -32,28 +46,40 @@
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\upgrade.gml</script>
+    <script>scripts\setWeather.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\fntArialBold</font>
+    <font>fonts\fntH2</font>
   </fonts>
   <objects name="objects">
     <object>objects\objJakobs</object>
-    <object>objects\objBullet</object>
-    <object>objects\objStrike</object>
-    <object>objects\objRocket</object>
-    <object>objects\objEnemyReg1</object>
-    <object>objects\objEnemyMelee1</object>
-    <object>objects\objEnemyHeavy1</object>
-    <object>objects\objSpawnerEM1</object>
-    <object>objects\objSpawnerER1</object>
-    <object>objects\objSpawnerEH1</object>
-    <object>objects\objHealthbar</object>
+    <objects name="weapons">
+      <object>objects\objBullet</object>
+      <object>objects\objStrike</object>
+      <object>objects\objRocket</object>
+      <object>objects\objSplosion</object>
+    </objects>
+    <objects name="enemies">
+      <object>objects\objEnemyReg1</object>
+      <object>objects\objEnemyMelee1</object>
+      <object>objects\objEnemyHeavy1</object>
+    </objects>
+    <objects name="spawners">
+      <object>objects\objSpawnerER1</object>
+      <object>objects\objSpawnerEM1</object>
+      <object>objects\objSpawnerEH1</object>
+    </objects>
+    <object>objects\objWorkshop</object>
+    <object>objects\objLootBox</object>
+    <object>objects\objStartMenu</object>
+    <object>objects\objWeather</object>
     <object>objects\objMusic</object>
     <object>objects\objHUD</object>
-    <object>objects\objWorkshop</object>
-    <object>objects\objSplosion</object>
+    <object>objects\objHealthbar</object>
   </objects>
   <rooms name="rooms">
+    <room>rooms\rmStartScreen</room>
     <room>rooms\rm1</room>
   </rooms>
   <help>

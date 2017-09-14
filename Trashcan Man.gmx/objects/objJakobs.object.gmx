@@ -35,7 +35,8 @@ image_speed = 0.04;
 hp = 100;
 
 //Speed
-spd = 8;
+orgSpd = 8;
+spd = orgSpd;
 
 //Points creation and set to 0
 points = 0;
@@ -49,7 +50,7 @@ strikeDelay = 20;
 strikeDamage = 1;
 
 //Heavy weapon stats
-heavyDelay = 30;
+heavyDelay = 40;
 heavyDamage = 1;
 
 //Create parts and start at 0
@@ -61,6 +62,23 @@ part3 = 0;
 regUpgradeReq = 100;
 strikeUpgradeReq = 100;
 heavyUpgradeReq = 100;
+
+//Dodge stats
+dodging = false;
+dodgeCooldown = 0;
+dodgeCooldownTime = 120;
+orgDodgeTime = 30;
+dodgeTime = orgDodgeTime;
+dodgeSpdMult = 2;
+dodgeDamageReduction = 0.2;
+
+//Damage taken from enemies
+enemyRegDamage = 1;
+enemyMeleeDamage = 2;
+enemyHeavyDamage = 1;
+
+//Damage reduction (1 is full damage, 0.5 is half damage, 2 is double damage)
+damageReduction = 1.0;
 </string>
           </argument>
         </arguments>
@@ -161,10 +179,64 @@ if (hp &lt;= 0) {
     game_restart();
 }
 
-//Press 1, 2, or 3 to upgrade
-if (keyboard_check(ord("1")) &amp;&amp; regUpgradeReq &lt;= part1) upgrade("reg");
-if (keyboard_check(ord("2")) &amp;&amp; strikeUpgradeReq &lt;= part2) upgrade("strike");
-if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("heavy");
+//Dodge using spacebar
+//Decreases time before you can use dodge
+dodgeCooldown -= 1;
+//If spacebar is pressed down and the cooldown is over
+if (keyboard_check(ord(" ")) &amp;&amp; dodgeCooldown &lt;= 0) {
+    //You are now dodging, the cooldown is reset, and the whoosh sound is played
+    dodging = true;
+    dodgeCooldown = dodgeCooldownTime;
+    audio_play_sound(sndWhoosh, 9, false);
+}
+//While dodging
+if (dodging) {
+    //Your speed is what ever the multiplier is times the original speed, countdown the time until dodge is over
+    spd = orgSpd * dodgeSpdMult;
+    dodgeTime -= 1;
+    damageReduction = dodgeDamageReduction;
+    //When dodge is over
+    if (dodgeTime &lt;= 0) {
+        //You are no longer dodging
+        dodging = false;
+        //Speed is reset
+        spd = orgSpd;
+        //Time to dodge reset
+        dodgeTime = orgDodgeTime;
+        damageReduction = 1.0;
+    }
+}
+
+//Crafting
+if (distance_to_object(objWorkshop) &lt;= objWorkshop.craftDistance) {
+    if (keyboard_check(ord("1")) &amp;&amp; regUpgradeReq &lt;= part1) upgrade("reg");
+    if (keyboard_check(ord("2")) &amp;&amp; strikeUpgradeReq &lt;= part2) upgrade("strike");
+    if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("heavy");
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="objLootBox">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>with(other) instance_destroy();
+audio_play_sound(sndPickup, 5, false);
 </string>
           </argument>
         </arguments>
@@ -187,7 +259,7 @@ if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("he
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>hp -= 1;
+            <string>hp -= enemyHeavyDamage * damageReduction;
 </string>
           </argument>
         </arguments>
@@ -210,7 +282,7 @@ if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("he
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>hp -= 2;
+            <string>hp -= enemyMeleeDamage * damageReduction;
 </string>
           </argument>
         </arguments>
@@ -233,13 +305,13 @@ if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("he
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>hp -= 1;
+            <string>hp -= enemyRegDamage * damageReduction;
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="5" enumb="32">
+    <event eventtype="5" enumb="82">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -256,7 +328,7 @@ if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("he
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>show_message(string(x) + " " + string(y));
+            <string>game_restart();
 </string>
           </argument>
         </arguments>

@@ -42,8 +42,8 @@ part2DropMax = 10;
 part3DropMax = 5;
 
 //Scaling
-image_xscale = 1.25;
-image_yscale = 1.25;
+image_xscale = 1.4;
+image_yscale = 1.4;
 </string>
           </argument>
         </arguments>
@@ -183,6 +183,9 @@ hp -= damageFromStrike;
             <string>//Upon impact with bullet, damage self and destory bullet that hit
 hp -= damageFromBullet;
 with(other) instance_destroy();
+
+//Play hit sound
+audio_play_sound(sndHit1, 8, false);
 </string>
           </argument>
         </arguments>
