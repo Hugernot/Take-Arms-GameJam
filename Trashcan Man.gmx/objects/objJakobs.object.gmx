@@ -31,6 +31,9 @@ cooldown = 0;
 //Animation speed
 image_speed = 0.04;
 
+//Mouse angle
+mouseAngle = point_direction(x, y, mouse_x, mouse_y);
+
 //Health
 hp = 100;
 
@@ -54,9 +57,9 @@ heavyDelay = 40;
 heavyDamage = 1;
 
 //Create parts and start at 0
-part1 = 0;
-part2 = 0;
-part3 = 0;
+part1 = 90;
+part2 = 90;
+part3 = 90;
 
 //Upgrade requirements
 regUpgradeReq = 100;
@@ -79,6 +82,16 @@ enemyHeavyDamage = 1;
 
 //Damage reduction (1 is full damage, 0.5 is half damage, 2 is double damage)
 damageReduction = 1.0;
+
+//Damage taken from heavy attack
+damageFromRocket = 10;
+damageFromBullet = 5;
+
+//Create Jakobs arm at sholder
+instance_create(x + (image_xscale * 2), y + (image_yscale - 12), objJakobsArm);
+
+//Jakobs depth
+depth = -1;
 </string>
           </argument>
         </arguments>
@@ -102,20 +115,18 @@ damageReduction = 1.0;
           <argument>
             <kind>1</kind>
             <string>//Arrow keys movement
-if (keyboard_check(ord("A"))) {
-    x -= spd;
-    if (image_xscale &gt; 0) {
-        image_xscale = -image_xscale;
-    }
+if (keyboard_check(ord("A"))) x -= spd;
+if (keyboard_check(ord("D"))) x += spd;
+if (keyboard_check(ord("W"))) y -= spd;
+if (keyboard_check(ord("S"))) y += spd;
+
+//Direction you are facing based on cursor
+mouseAngle = point_direction(x, y, mouse_x, mouse_y); 
+if (mouseAngle &lt; 270 &amp;&amp; mouseAngle &gt; 90 &amp;&amp; image_xscale &gt; 0) {
+    image_xscale = -image_xscale;
+} else if ((mouseAngle &gt;= 270 || mouseAngle &lt;= 90) &amp;&amp; image_xscale &lt; 0) {
+    image_xscale = -image_xscale;
 }
-if (keyboard_check(ord("D"))) {
-    x += spd;
-    if (image_xscale &lt; 0) {
-        image_xscale = -image_xscale;
-    }
-}
-if (keyboard_check(ord("W")))y -= spd;
-if (keyboard_check(ord("S")))y += spd;
 
 //Boundaries
 if (x - sprite_width/2 * image_xscale &lt;= 0) {
@@ -153,7 +164,7 @@ if (keyboard_check(vk_down)){
 
 //Attack cooldown
 cooldown -= 1;
-
+/*
 //Regular
 if (mouse_check_button(mb_left) &amp;&amp; cooldown &lt;= 0) {
     instance_create(x + (32 * image_xscale), y - (12 * image_yscale), objBullet);
@@ -163,16 +174,14 @@ if (mouse_check_button(mb_left) &amp;&amp; cooldown &lt;= 0) {
 //Melee
 if (mouse_check_button(mb_right) &amp;&amp; cooldown &lt;= 0) {
     instance_create(x + (16 * image_xscale), y, objStrike);
-    //audio_play_sound(sndGunshot, 10, false);
     cooldown = strikeDelay;
 }
 
 //Heavy
 if (mouse_check_button(mb_middle) &amp;&amp; cooldown &lt;= 0) {
     instance_create(x + (32 * image_xscale), y - (12 * image_yscale), objRocket);
-    //audio_play_sound(sndGunshot, 10, false);
     cooldown = heavyDelay;
-}
+} */
 
 //Destroy self and restart game if hp runs out, play death sound
 if (hp &lt;= 0) {
@@ -209,10 +218,61 @@ if (dodging) {
 
 //Crafting
 if (distance_to_object(objWorkshop) &lt;= objWorkshop.craftDistance) {
+    if (keyboard_check_pressed(ord("F")) &amp;&amp; instance_exists(objCraft) == false) {
+        instance_create(objWorkshop.x, objWorkshop.y, objCraft);
+    }
     if (keyboard_check(ord("1")) &amp;&amp; regUpgradeReq &lt;= part1) upgrade("reg");
     if (keyboard_check(ord("2")) &amp;&amp; strikeUpgradeReq &lt;= part2) upgrade("strike");
     if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("heavy");
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="objEnemyBullet">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= damageFromBullet;
+with(other) instance_destroy();
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="objEnemyRocket">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= damageFromRocket;
+with(other) instance_destroy();
 </string>
           </argument>
         </arguments>
@@ -235,7 +295,10 @@ if (distance_to_object(objWorkshop) &lt;= objWorkshop.craftDistance) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>with(other) instance_destroy();
+            <string>part1 += other.part1;
+part2 += other.part2;
+part3 += other.part3;
+with(other) instance_destroy();
 audio_play_sound(sndPickup, 5, false);
 </string>
           </argument>
@@ -352,6 +415,29 @@ audio_play_sound(sndPickup, 5, false);
           <argument>
             <kind>1</kind>
             <string>game_end();
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>draw_self();
 </string>
           </argument>
         </arguments>

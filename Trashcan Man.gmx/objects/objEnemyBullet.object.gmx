@@ -29,7 +29,7 @@
 image_yscale /= 2;
 
 //Sets direction and angle toward where it is being fired
-direction = point_direction(x, y, mouse_x, mouse_y) + round(random_range(0, 8));
+direction = point_direction(x, y, objJakobs.x, objJakobs.y) + round(random_range(0, 8));
 speed = 16;
 image_angle = direction;
 

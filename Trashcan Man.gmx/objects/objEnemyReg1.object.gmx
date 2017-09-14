@@ -46,7 +46,17 @@ image_xscale = 1.7;
 image_yscale = 1.7;
 
 //Speed
-speed = 2;
+orgSpeed = 2;
+speed = orgSpeed;
+
+//Distance from player before stop
+distFromPlayerStop = 200;
+
+//Cooldown
+cooldown = 0;
+heavyDelay = 150;
+
+//Drop chances
 </string>
           </argument>
         </arguments>
@@ -69,13 +79,14 @@ speed = 2;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//Giving parts to Jakobs based on range
-objJakobs.part1 += round(random_range(part1DropMin, part1DropMax));
-objJakobs.part2 += round(random_range(part2DropMin, part2DropMax));
-objJakobs.part3 += round(random_range(part3DropMin, part3DropMax));
-
-//Placing parts into loot box
-instance_create(x, y, objLootBox);
+            <string>//Placing parts into loot box
+with (instance_create(x, y, objLootBox)) {
+    part1 = round(random_range(other.part1DropMin, other.part1DropMax));
+    part2 = round(random_range(other.part2DropMin, other.part2DropMax));
+    part3 = round(random_range(other.part3DropMin, other.part3DropMax));
+    image_xscale = other.image_xscale * 0.5;
+    image_yscale = other.image_yscale * 0.5;
+}
 
 //Give Jakobs a point
 objJakobs.points += 1;
@@ -114,6 +125,20 @@ if (direction &lt; 270 &amp;&amp; direction &gt; 90 &amp;&amp; image_xscale &gt;
 //If all health is lost, destroy instance
 if (hp &lt;= 0) {
     instance_destroy();
+}
+
+//Checks distance from player and stops if it is too close
+if (distance_to_object(objJakobs) &lt;= distFromPlayerStop) {
+    speed = 0;
+} else {
+    speed = orgSpeed;
+}
+
+//Shoots heavy weapon at player
+cooldown -= 1;
+if (cooldown &lt;= 0) {
+    instance_create(x + (0 * image_xscale), y - (0 * image_yscale), objEnemyRocket);
+    cooldown = heavyDelay;
 }
 </string>
           </argument>
@@ -188,32 +213,6 @@ hp -= damageFromStrike;
             <string>//Upon impact with bullet, damage self and destory bullet that hit
 hp -= damageFromBullet;
 with(other) instance_destroy();
-
-//Play hit sound
-audio_play_sound(sndHit1, 8, false);
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="5" enumb="37">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>show_message(direction);
 </string>
           </argument>
         </arguments>

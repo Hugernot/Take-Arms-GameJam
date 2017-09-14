@@ -23,6 +23,7 @@
   </sounds>
   <sprites name="sprites">
     <sprite>sprites\sprJakobsIdle</sprite>
+    <sprite>sprites\sprJakobsArm</sprite>
     <sprites name="weapons">
       <sprite>sprites\sprBullet</sprite>
       <sprite>sprites\sprStrike</sprite>
@@ -38,15 +39,24 @@
     <sprite>sprites\sprWorkshop</sprite>
     <sprite>sprites\sprLootBox</sprite>
     <sprite>sprites\sprTitle</sprite>
+    <sprite>sprites\sprCloseButton</sprite>
+    <sprite>sprites\sprDoor</sprite>
+    <sprite>sprites\sprBarrier</sprite>
+    <sprite>sprites\sprBlueprintsAttatchment</sprite>
+    <sprite>sprites\sprBlueprintsWeapon</sprite>
   </sprites>
   <backgrounds name="background">
-    <background>background\bgTileset1</background>
-    <background>background\bgStreetTileset</background>
+    <background>background\bgBackupTS</background>
+    <background>background\bgStreetTS</background>
+    <background>background\bgOpening</background>
+    <background>background\bgTS1</background>
+    <background>background\bgShadowTS</background>
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\upgrade.gml</script>
     <script>scripts\setWeather.gml</script>
+    <script>scripts\slowRoom.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\fntArialBold</font>
@@ -54,10 +64,13 @@
   </fonts>
   <objects name="objects">
     <object>objects\objJakobs</object>
+    <object>objects\objJakobsArm</object>
     <objects name="weapons">
       <object>objects\objBullet</object>
+      <object>objects\objEnemyBullet</object>
       <object>objects\objStrike</object>
       <object>objects\objRocket</object>
+      <object>objects\objEnemyRocket</object>
       <object>objects\objSplosion</object>
     </objects>
     <objects name="enemies">
@@ -77,10 +90,16 @@
     <object>objects\objMusic</object>
     <object>objects\objHUD</object>
     <object>objects\objHealthbar</object>
+    <object>objects\objCraft</object>
+    <object>objects\objDoor</object>
+    <object>objects\objBarrier</object>
+    <object>objects\objBlueprintsAttachment</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rmStartScreen</room>
+    <room>rooms\rm1_1</room>
     <room>rooms\rm1</room>
+    <room>rooms\rmEmpty</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

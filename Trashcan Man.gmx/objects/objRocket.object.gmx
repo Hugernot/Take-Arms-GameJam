@@ -26,7 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>//Sets direction and angle toward where it is being fired
-direction = point_direction(x, y, mouse_x, mouse_y);
+direction = point_direction(x, y, mouse_x, mouse_y) + round(random_range(0, 5));
 speed = 8;
 image_angle = direction;
 

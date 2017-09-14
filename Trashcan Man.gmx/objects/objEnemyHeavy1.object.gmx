@@ -19,7 +19,7 @@
         <exetype>2</exetype>
         <functionname></functionname>
         <codestring></codestring>
-        <whoName>self</whoName>
+        <whoName>other</whoName>
         <relative>0</relative>
         <isnot>0</isnot>
         <arguments>
@@ -44,6 +44,22 @@ part3DropMax = 10;
 //Scaling
 image_xscale = 2;
 image_yscale = 2;
+
+//Distance from player before stop
+distFromPlayerStop = 275;
+
+//Cooldown
+cooldown = 0;
+volleyDelay = 150;
+
+orgBulletDelay = 15;
+bulletDelay = 0;
+bulletsPerVolley = 3;
+bulletsFired = 0;
+
+//Speed
+orgSpeed = 1;
+speed = orgSpeed;
 </string>
           </argument>
         </arguments>
@@ -66,10 +82,14 @@ image_yscale = 2;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//Giving parts to Jakobs based on range
-objJakobs.part1 += round(random_range(part1DropMin, part1DropMax));
-objJakobs.part2 += round(random_range(part2DropMin, part2DropMax));
-objJakobs.part3 += round(random_range(part3DropMin, part3DropMax));
+            <string>//Placing parts into loot box
+with (instance_create(x, y, objLootBox)) {
+    part1 = round(random_range(other.part1DropMin, other.part1DropMax));
+    part2 = round(random_range(other.part2DropMin, other.part2DropMax));
+    part3 = round(random_range(other.part3DropMin, other.part3DropMax));
+    image_xscale = other.image_xscale * 0.5;
+    image_yscale = other.image_yscale * 0.5;
+}
 
 //Give Jakobs a point
 objJakobs.points += 1;
@@ -97,7 +117,6 @@ objJakobs.points += 1;
             <kind>1</kind>
             <string>//Chase player
 direction = point_direction(x, y, objJakobs.x, objJakobs.y);
-speed = 1;
 
 //If all health is lost, destroy instance
 if (hp &lt;= 0) {
@@ -109,6 +128,28 @@ if (direction &lt; 270 &amp;&amp; direction &gt; 90 &amp;&amp; image_xscale &gt;
     image_xscale = -image_xscale;
 } else if ((direction &gt;= 270 || direction &lt;= 90) &amp;&amp; image_xscale &lt; 0) {
     image_xscale = -image_xscale;
+}
+
+//Checks distance from player and stops if it is too close
+if (distance_to_object(objJakobs) &lt;= distFromPlayerStop) {
+    speed = 0;
+} else {
+    speed = orgSpeed;
+}
+
+//Shoots heavy weapon at player
+cooldown--;
+if (cooldown &lt;= 0) {
+    bulletDelay--;
+    if (bulletDelay &lt;= 0) {
+        instance_create(x + (0 * image_xscale), y - (0 * image_yscale), objEnemyBullet);
+        bulletDelay = orgBulletDelay;
+        bulletsFired++;
+    }
+    if (bulletsFired == bulletsPerVolley) {
+        cooldown = volleyDelay;
+        bulletsFired = 0;
+    }
 }
 </string>
           </argument>
@@ -183,9 +224,6 @@ hp -= damageFromStrike;
             <string>//Upon impact with bullet, damage self and destory bullet that hit
 hp -= damageFromBullet;
 with(other) instance_destroy();
-
-//Play hit sound
-audio_play_sound(sndHit1, 8, false);
 </string>
           </argument>
         </arguments>
