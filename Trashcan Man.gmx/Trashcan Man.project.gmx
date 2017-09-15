@@ -51,7 +51,6 @@
     <sprite>sprites\sprWorkshop</sprite>
     <sprite>sprites\sprLootBox</sprite>
     <sprite>sprites\sprTitle</sprite>
-    <sprite>sprites\sprCloseButton</sprite>
     <sprite>sprites\sprDoor</sprite>
     <sprite>sprites\sprBarrier</sprite>
     <sprite>sprites\sprBlueprintsAttatchment</sprite>
