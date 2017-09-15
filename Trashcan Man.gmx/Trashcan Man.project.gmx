@@ -17,13 +17,20 @@
       <sound>sound\sndMusic</sound>
     </sounds>
     <sound>sound\sndDeath</sound>
-    <sound>sound\sndPickup</sound>
     <sound>sound\sndRain</sound>
+    <sound>sound\sndPickup</sound>
     <sound>sound\sndUpgrade</sound>
   </sounds>
   <sprites name="sprites">
     <sprite>sprites\sprJakobsIdle</sprite>
-    <sprite>sprites\sprJakobsArm</sprite>
+    <sprite>sprites\sprJakobsRunning</sprite>
+    <sprites name="arms">
+      <sprite>sprites\sprArmEmpty</sprite>
+      <sprite>sprites\sprArmRevolver</sprite>
+      <sprite>sprites\sprArmRevolverRifleMag</sprite>
+      <sprite>sprites\sprArmSword</sprite>
+      <sprite>sprites\sprArmRocketLauncher</sprite>
+    </sprites>
     <sprites name="weapons">
       <sprite>sprites\sprBullet</sprite>
       <sprite>sprites\sprStrike</sprite>
@@ -35,6 +42,11 @@
       <sprite>sprites\sprEnemyHeavy1Idle</sprite>
       <sprite>sprites\sprEnemyMelee1Idle</sprite>
     </sprites>
+    <sprites name="HUD">
+      <sprite>sprites\sprHUDBorder</sprite>
+      <sprite>sprites\sprHUDBackground</sprite>
+      <sprite>sprites\sprHUDFill</sprite>
+    </sprites>
     <sprite>sprites\sprSpawner</sprite>
     <sprite>sprites\sprWorkshop</sprite>
     <sprite>sprites\sprLootBox</sprite>
@@ -44,6 +56,8 @@
     <sprite>sprites\sprBarrier</sprite>
     <sprite>sprites\sprBlueprintsAttatchment</sprite>
     <sprite>sprites\sprBlueprintsWeapon</sprite>
+    <sprite>sprites\sprWindow</sprite>
+    <sprite>sprites\sprOpenSign</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bgBackupTS</background>
@@ -57,10 +71,12 @@
     <script>scripts\upgrade.gml</script>
     <script>scripts\setWeather.gml</script>
     <script>scripts\slowRoom.gml</script>
+    <script>scripts\scrUnstick.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\fntArialBold</font>
     <font>fonts\fntH2</font>
+    <font>fonts\fntGraffiti</font>
   </fonts>
   <objects name="objects">
     <object>objects\objJakobs</object>
@@ -83,17 +99,24 @@
       <object>objects\objSpawnerEM1</object>
       <object>objects\objSpawnerEH1</object>
     </objects>
+    <objects name="invisible">
+      <object>objects\objWeather</object>
+      <object>objects\objCraft</object>
+      <object>objects\objHealthbar</object>
+      <object>objects\objHUD</object>
+      <object>objects\objMusic</object>
+      <object>objects\objPathFindingGrid</object>
+      <object>objects\objStartMenu</object>
+      <object>objects\objBarrier</object>
+    </objects>
+    <objects name="pickups">
+      <object>objects\objBlueprintsAttachment</object>
+      <object>objects\objLootBox</object>
+    </objects>
     <object>objects\objWorkshop</object>
-    <object>objects\objLootBox</object>
-    <object>objects\objStartMenu</object>
-    <object>objects\objWeather</object>
-    <object>objects\objMusic</object>
-    <object>objects\objHUD</object>
-    <object>objects\objHealthbar</object>
-    <object>objects\objCraft</object>
     <object>objects\objDoor</object>
-    <object>objects\objBarrier</object>
-    <object>objects\objBlueprintsAttachment</object>
+    <object>objects\objWindow</object>
+    <object>objects\objOpenSign</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rmStartScreen</room>

@@ -74,7 +74,8 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>room_goto(rmEmpty);
+            <string>audio_stop_sound(sndOpening);
+room_goto(rmEmpty);
 </string>
           </argument>
         </arguments>

@@ -53,6 +53,7 @@ craftDistance = 150;
 draw_set_color(c_black);
 draw_circle(x, y, craftDistance, false);
 draw_self();
+draw_set_alpha(1);
 </string>
           </argument>
         </arguments>

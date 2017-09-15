@@ -57,6 +57,19 @@ cooldown = 0;
 heavyDelay = 150;
 
 //Drop chances
+
+//Time spent stuck for AI unsticking purposes
+stuckTime = 0;
+unstickTime = 240;
+orgTimeUnsticking = 60;
+timeUnsticking = orgTimeUnsticking;
+
+//Create pathfinding
+path = path_add();
+orgPathTimer = 10;
+pathTimer = orgPathTimer;
+jakobsLocationx = 0;
+jakobsLocationy = 0;
 </string>
           </argument>
         </arguments>
@@ -113,8 +126,7 @@ objJakobs.points += 1;
           <argument>
             <kind>1</kind>
             <string>//Chase player
-direction = point_direction(x, y, objJakobs.x, objJakobs.y);
-
+    direction = point_direction(x, y, objJakobs.x, objJakobs.y);
 //Points enemy in direction it is going
 if (direction &lt; 270 &amp;&amp; direction &gt; 90 &amp;&amp; image_xscale &gt; 0) {
     image_xscale = -image_xscale;
@@ -135,11 +147,26 @@ if (distance_to_object(objJakobs) &lt;= distFromPlayerStop) {
 }
 
 //Shoots heavy weapon at player
-cooldown -= 1;
+cooldown --;
 if (cooldown &lt;= 0) {
     instance_create(x + (0 * image_xscale), y - (0 * image_yscale), objEnemyRocket);
     cooldown = heavyDelay;
 }
+
+//Unsticking enemy based on how long they are in a place
+scrUnstick();
+
+//Path finding every orgPathTimer/roomSpeed seconds
+pathTimer--;
+if (pathTimer &lt;= 0) {
+    pathTimer = orgPathTimer;
+    jakobsLocationx = (objJakobs.x div 32) * 32 + 16;
+    jakobsLocationy = (objJakobs.y div 32) * 32 + 16;
+    if (mp_grid_path(global.grid, path, x, y, jakobsLocationx, jakobsLocationy, true)) {
+        path_start(path, 4, path_action_stop, false);
+    }
+}
+
 </string>
           </argument>
         </arguments>

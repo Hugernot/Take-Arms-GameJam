@@ -91,7 +91,10 @@ damageFromBullet = 5;
 instance_create(x + (image_xscale * 2), y + (image_yscale - 12), objJakobsArm);
 
 //Jakobs depth
-depth = -1;
+depth = -3;
+
+//Speed penalty for not walking in the direction you are facing
+spdPenalty = 0.75;
 </string>
           </argument>
         </arguments>
@@ -114,13 +117,7 @@ depth = -1;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//Arrow keys movement
-if (keyboard_check(ord("A"))) x -= spd;
-if (keyboard_check(ord("D"))) x += spd;
-if (keyboard_check(ord("W"))) y -= spd;
-if (keyboard_check(ord("S"))) y += spd;
-
-//Direction you are facing based on cursor
+            <string>//Direction you are facing based on cursor
 mouseAngle = point_direction(x, y, mouse_x, mouse_y); 
 if (mouseAngle &lt; 270 &amp;&amp; mouseAngle &gt; 90 &amp;&amp; image_xscale &gt; 0) {
     image_xscale = -image_xscale;
@@ -128,18 +125,85 @@ if (mouseAngle &lt; 270 &amp;&amp; mouseAngle &gt; 90 &amp;&amp; image_xscale &g
     image_xscale = -image_xscale;
 }
 
-//Boundaries
-if (x - sprite_width/2 * image_xscale &lt;= 0) {
-    x = sprite_width/2 * image_xscale;
+//Arrow keys movement
+if (keyboard_check(ord("A"))) {
+    sprite_index = sprJakobsRunning;
+    if (image_xscale &lt; 0) {
+        x -= spd;
+    } else {
+        x -= spd * spdPenalty;
+    }
 }
-if (y - sprite_height/2 * image_xscale &lt;= 0) {
-    y = sprite_height/2 * image_xscale;
+if (keyboard_check(ord("D"))) {
+    sprite_index = sprJakobsRunning;
+    if (image_xscale &gt; 0) {
+        x += spd;
+    } else {
+        x += spd * spdPenalty;
+    }
 }
-if (x + sprite_width/2 * image_xscale &gt;= room_width) {
-    x = room_width - sprite_width/2 * image_xscale;
+if (keyboard_check(ord("W"))) {
+    y -= spd;
+    sprite_index = sprJakobsRunning;
 }
-if (y + sprite_height/2 * image_xscale &gt;= room_height) {
-    y = room_height - sprite_height/2 * image_xscale;
+if (keyboard_check(ord("S"))) {
+    y += spd;
+    sprite_index = sprJakobsRunning;
+}
+
+if (keyboard_check(ord("S")) || keyboard_check(ord("W")) || keyboard_check(ord("D")) || keyboard_check(ord("A"))) {
+    moving = true;
+} else moving = false;
+
+if (!moving) sprite_index = sprJakobsIdle;
+
+/*Boundaries, checks if Jakobs is out of the room using the rooms dimensions
+and his collision mask*/
+if (0 &gt; bbox_left) {
+    x = xprevious;
+}
+if (0 &gt; bbox_top) {
+    y = yprevious;
+}
+if (room_width &lt; bbox_right) {
+    x = xprevious;
+}
+if (room_height &lt; bbox_bottom) {
+    y = yprevious;
+}
+
+//Destroy self and restart game if hp runs out, play death sound
+if (hp &lt;= 0) {
+    game_restart();
+}
+
+//Dodge using spacebar
+dodgeCooldown -= 1;
+if (keyboard_check_pressed(ord(" ")) &amp;&amp; dodgeCooldown &lt;= 0) {
+    dodging = true;
+    dodgeCooldown = dodgeCooldownTime;
+    audio_play_sound(sndWhoosh, 9, false);
+}
+if (dodging) {
+    spd = orgSpd * dodgeSpdMult;
+    dodgeTime -= 1;
+    damageReduction = dodgeDamageReduction;
+    if (dodgeTime &lt;= 0) {
+        dodging = false;
+        spd = orgSpd;
+        dodgeTime = orgDodgeTime;
+        damageReduction = 1.0;
+    }
+}
+
+//Crafting
+if (distance_to_object(objWorkshop) &lt;= objWorkshop.craftDistance) {
+    if (keyboard_check_pressed(ord("F")) &amp;&amp; instance_exists(objCraft) == false) {
+        instance_create(objWorkshop.x, objWorkshop.y, objCraft);
+    }
+    if (keyboard_check(ord("1")) &amp;&amp; regUpgradeReq &lt;= part1) upgrade("reg");
+    if (keyboard_check(ord("2")) &amp;&amp; strikeUpgradeReq &lt;= part2) upgrade("strike");
+    if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("heavy");
 }
 
 //GROW DAMNIT
@@ -162,117 +226,7 @@ if (keyboard_check(vk_down)){
     }
 }
 
-//Attack cooldown
-cooldown -= 1;
-/*
-//Regular
-if (mouse_check_button(mb_left) &amp;&amp; cooldown &lt;= 0) {
-    instance_create(x + (32 * image_xscale), y - (12 * image_yscale), objBullet);
-    cooldown = regDelay;
-}
 
-//Melee
-if (mouse_check_button(mb_right) &amp;&amp; cooldown &lt;= 0) {
-    instance_create(x + (16 * image_xscale), y, objStrike);
-    cooldown = strikeDelay;
-}
-
-//Heavy
-if (mouse_check_button(mb_middle) &amp;&amp; cooldown &lt;= 0) {
-    instance_create(x + (32 * image_xscale), y - (12 * image_yscale), objRocket);
-    cooldown = heavyDelay;
-} */
-
-//Destroy self and restart game if hp runs out, play death sound
-if (hp &lt;= 0) {
-    game_restart();
-}
-
-//Dodge using spacebar
-//Decreases time before you can use dodge
-dodgeCooldown -= 1;
-//If spacebar is pressed down and the cooldown is over
-if (keyboard_check(ord(" ")) &amp;&amp; dodgeCooldown &lt;= 0) {
-    //You are now dodging, the cooldown is reset, and the whoosh sound is played
-    dodging = true;
-    dodgeCooldown = dodgeCooldownTime;
-    audio_play_sound(sndWhoosh, 9, false);
-}
-//While dodging
-if (dodging) {
-    //Your speed is what ever the multiplier is times the original speed, countdown the time until dodge is over
-    spd = orgSpd * dodgeSpdMult;
-    dodgeTime -= 1;
-    damageReduction = dodgeDamageReduction;
-    //When dodge is over
-    if (dodgeTime &lt;= 0) {
-        //You are no longer dodging
-        dodging = false;
-        //Speed is reset
-        spd = orgSpd;
-        //Time to dodge reset
-        dodgeTime = orgDodgeTime;
-        damageReduction = 1.0;
-    }
-}
-
-//Crafting
-if (distance_to_object(objWorkshop) &lt;= objWorkshop.craftDistance) {
-    if (keyboard_check_pressed(ord("F")) &amp;&amp; instance_exists(objCraft) == false) {
-        instance_create(objWorkshop.x, objWorkshop.y, objCraft);
-    }
-    if (keyboard_check(ord("1")) &amp;&amp; regUpgradeReq &lt;= part1) upgrade("reg");
-    if (keyboard_check(ord("2")) &amp;&amp; strikeUpgradeReq &lt;= part2) upgrade("strike");
-    if (keyboard_check(ord("3")) &amp;&amp; heavyUpgradeReq &lt;= part3) upgrade("heavy");
-}
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="4" ename="objEnemyBullet">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>hp -= damageFromBullet;
-with(other) instance_destroy();
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="4" ename="objEnemyRocket">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>hp -= damageFromRocket;
-with(other) instance_destroy();
 </string>
           </argument>
         </arguments>
@@ -374,6 +328,54 @@ audio_play_sound(sndPickup, 5, false);
         </arguments>
       </action>
     </event>
+    <event eventtype="4" ename="objEnemyRocket">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= damageFromRocket;
+with(other) instance_destroy();
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="objEnemyBullet">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= damageFromBullet;
+with(other) instance_destroy();
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="5" enumb="82">
       <action>
         <libid>1</libid>
@@ -416,6 +418,28 @@ audio_play_sound(sndPickup, 5, false);
             <kind>1</kind>
             <string>game_end();
 </string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="5" enumb="16">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string></string>
           </argument>
         </arguments>
       </action>

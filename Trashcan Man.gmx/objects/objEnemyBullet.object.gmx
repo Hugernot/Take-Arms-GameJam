@@ -25,8 +25,9 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//Makes half the size in the y axis (squish)
-image_yscale /= 2;
+            <string>//Makes 1.5x larger
+image_xscale *= 1.5;
+image_yscale *= 1.5;
 
 //Sets direction and angle toward where it is being fired
 direction = point_direction(x, y, objJakobs.x, objJakobs.y) + round(random_range(0, 8));

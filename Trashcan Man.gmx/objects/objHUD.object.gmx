@@ -8,7 +8,7 @@
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
-    <event eventtype="8" enumb="0">
+    <event eventtype="8" enumb="64">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -25,27 +25,39 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_set_alpha(1);
+            <string>//Healthbar and stuff top left
+draw_sprite_ext(sprHUDBackground, 1, 40, 40, 2, 2, 0, c_white, 1);
+draw_sprite_ext(sprHUDFill, 1, 40, 40, (objJakobs.hp/100) * 2, 2, 0, c_white, 1);
+draw_sprite_ext(sprHUDBorder, 1, 40, 40, 2, 2, 0, c_white, 1);
+
+draw_set_alpha(1);
 draw_set_color(c_black);
-draw_set_font(fntArialBold);
+draw_set_halign(fa_center);
+draw_set_valign(fa_middle);
+draw_set_font(fntGraffiti);
+
+draw_text(40 + (2 * 53), 40 + (2 * 19),
+"Points: " + string(objJakobs.points))
+
 draw_set_halign(fa_left);
-draw_text(view_xview[0] + 10, view_yview[0] + 10, 
-"Health: " + string(objJakobs.hp) + 
-"#Points: " + string(objJakobs.points) +
-"#--PARTS--" + 
+draw_set_valign(fa_bottom);
+draw_set_font(fntArialBold);
+
+draw_text(10, 200, +
+"--PARTS--" +
 "#Part1: " + string(objJakobs.part1) +
 "#Part2: " + string(objJakobs.part2) +
 "#Part3: " + string(objJakobs.part3));
 
 draw_set_color(c_yellow);
 if (objJakobs.part1 &gt;= objJakobs.regUpgradeReq) {
-    draw_text(view_xview[0] + 10, view_yview[0] + 200, "PRESS 1 TO UPGRADE #REGULAR WEAPON")
+    draw_text(10, 400, "PRESS 1 TO UPGRADE #REGULAR WEAPON")
 }
 if (objJakobs.part2 &gt;= objJakobs.strikeUpgradeReq) {
-    draw_text(view_xview[0] + 10, view_yview[0] + 275, "PRESS 2 TO UPGRADE #MELEE WEAPON")
+    draw_text(10, 500, "PRESS 2 TO UPGRADE #MELEE WEAPON")
 }
 if (objJakobs.part3 &gt;= objJakobs.strikeUpgradeReq) {
-    draw_text(view_xview[0] + 10, view_yview[0] + 350, "PRESS 3 TO UPGRADE #HEAVY WEAPON")
+    draw_text(10, 600, "PRESS 3 TO UPGRADE #HEAVY WEAPON")
 }
 </string>
           </argument>
